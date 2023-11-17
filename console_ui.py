@@ -2,6 +2,7 @@ import os
 from handler_db import databaseHandler
 import sqlite3
 import time
+from dadata import Dadata
 
 db = databaseHandler()
 
@@ -72,6 +73,28 @@ def settings():
 def newRequest():
 
     os.system('clear')
+    token = db.getAPI()
+    secret = db.getSecret()
+    dadata = Dadata(token=token, secret=secret)
+    language = db.getLanguage()
+    while True:
+        print("Введите ваш запрос адреса. Для выхода наберите exit")
+        address = input("< ")
+        if address == "exit":
+            break
+        result = dadata.suggest("address", address, language=language, count=20)
+        count = 0
+        for address in result:
+            count += 1
+            print(f"{count}. {address['value']}")
+        
+        print("Выберите подходящий адрес для получения геометок")
+        choice = int(input("< "))
+        address = result[choice-1]['value']
+        result = dadata.suggest("address", address, count=1, language=language)
+        
+        print(f"Геометки выбранного вами адреса:\nШирота: {result[0]['data']['geo_lat']}\nДолгота: {result[0]['data']['geo_lon']}")
+
 
 
 
