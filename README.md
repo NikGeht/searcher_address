@@ -11,7 +11,7 @@ source env/bin/activate
 ```
 3. Установить необходимые зависимости
 ```
-pip -r requirements.txt
+pip install -r requirements.txt
 ```
 4. Запустить проект
 ```
