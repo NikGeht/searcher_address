@@ -11,10 +11,10 @@ class databaseHandler:
             print("Не удалось связаться с базой данных")
         
         self.cursor = self.connection.cursor()
-        self.create_table()
+        self.createTable()
         
 
-    def create_table(self):
+    def createTable(self):
 
         ## Creating db, table ##
         try:
