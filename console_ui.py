@@ -8,7 +8,7 @@ db = databaseHandler()
 
 def settings():
 
-    os.system('clear')
+    os.system('cls')
     print('1. Изменить API ключ')
     print('2. Изменить Secret ключ')
     print('3. Изменить язык ответа')
@@ -72,7 +72,7 @@ def settings():
 
 def newRequest():
 
-    os.system('clear')
+    os.system('cls')
     token = db.getAPI()
     secret = db.getSecret()
     dadata = Dadata(token=token, secret=secret)
@@ -100,7 +100,7 @@ def newRequest():
 
 def main_menu():
 
-    os.system('clear')
+    os.system('cls')
     print('1. Настройки')
     print('2. Новый запрос')
     print('3. Выход')
