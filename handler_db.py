@@ -48,5 +48,29 @@ class databaseHandler:
         except sqlite3.IntegrityError as e:
             print(e)
 
+    
+    def getAPI(self):
+        try:
+            api_key = self.cursor.execute(f'select api_key from config where id=1').fetchone()
+            return api_key[0]
+        except sqlite3.Error as e:
+            print(e)
+            return None
+        
+    def getSecret(self):
+        try:
+            secret_key = self.cursor.execute(f'select secret_key from config where id=1').fetchone()
+            return secret_key[0]
+        except sqlite3.Error as e:
+            print(e)
+            return None
+        
+    def getLanguage(self):
+        try:
+            language = self.cursor.execute(f'select language from config where id=1').fetchone()
+            return language[0]
+        except sqlite3.Error as e:
+            print(e)
+            return None
 
 
