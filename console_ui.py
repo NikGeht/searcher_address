@@ -1,119 +1,119 @@
 import os
-from handler_db import databaseHandler
 import sqlite3
+import sys
 import time
-from dadata import Dadata
 
-db = databaseHandler()
+import dadata
+
+from handler_db import DatabaseHandler
+
+db = DatabaseHandler()
+
 
 def settings():
+    os.system("cls")
 
-    os.system('cls')
-    print('1. Изменить API ключ')
-    print('2. Изменить Secret ключ')
-    print('3. Изменить язык ответа')
-    print('4. Назад')
+    print("1. Change API key")
+    print("2. Change Secret key")
+    print("3. Change language")
+    print("4. Back")
 
-    varChoice = int(input("< "))
-    
-    match varChoice:
+    var_choice: int = int(input("< "))
+
+    match var_choice:
         case 1:
-            print("Введите новый API ключ:")
-            newAPIKey = input("< ")
+            print("Enter new API key:")
+            new_api_key: str = input("< ")
             try:
-                db.changeAPI(newAPIKey)
-                
-                
-                
+                db.change_api(new_api_key)
+
             except sqlite3.Error:
-                print("Возникла ошибка при изменении ключа")
+                print("Error: couldn't change API key")
             else:
-                print("API ключ успешно изменен")
-            
-            print("Возврат в главное меню...")
+                print("API key was successfully changed")
+
+            print("Back to the settings...")
             time.sleep(3)
             settings()
 
         case 2:
-
-            print("Введите новый secret ключ:")
-            newSecretKey = input("< ")
+            print("Enter new Secret key:")
+            new_secret_key: str = input("< ")
             try:
-                db.changeSecretKey(newSecretKey)
-                
+                db.change_secret_key(new_secret_key)
+
             except sqlite3.Error:
-                print("Возникла ошибка при изменении ключа")
+                print("Error: couldn't change Secret key")
             else:
-                print("Secret ключ успешно изменен")
-            
-            print("Возврат в главное меню...")
+                print("Secret key was successfully changed")
+
+            print("Back to the settings...")
             time.sleep(3)
             settings()
-        
+
         case 3:
+            print("Enter language:")
+            print("1. Russian")
+            print("2. English")
 
-            print("Выберите язык:")
-            print("1. Русский язык")
-            print("2. Английский язык")
+            var_language = int(input("< "))
 
-            varLanguage = int(input("< "))
-
-            if varLanguage == 1:
-                db.changeLanguage("ru")
+            if var_language == 1:
+                db.change_language("ru")
             else:
-                db.changeLanguage("en")
-            
-            print("Возврат в главное меню...")
+                db.change_language("en")
+
+            print("Back to the settings...")
             time.sleep(3)
             settings()
 
         case 4:
             main_menu()
 
-def newRequest():
 
-    os.system('cls')
-    token = db.getAPI()
-    secret = db.getSecret()
-    dadata = Dadata(token=token, secret=secret)
-    language = db.getLanguage()
+def new_request():
+    os.system("cls")
+    api_key: str = db.get_api()
+    secret_key: str = db.get_secret()
+    data_client = dadata.Dadata(token=api_key, secret=secret_key)
+    language: str = db.get_language()
     while True:
-        print("Введите ваш запрос адреса. Для выхода наберите exit")
-        address = input("< ")
-        if address == "exit":
+        print("Enter your request. Enter exit for quit")
+        search_address = input("< ")
+        if search_address == "exit":
             break
-        result = dadata.suggest("address", address, language=language, count=20)
-        count = 0
-        for address in result:
-            count += 1
-            print(f"{count}. {address['value']}")
-        
-        print("Выберите подходящий адрес для получения геометок")
-        choice = int(input("< "))
-        address = result[choice-1]['value']
-        result = dadata.suggest("address", address, count=1, language=language)
-        
-        print(f"Геометки выбранного вами адреса:\nШирота: {result[0]['data']['geo_lat']}\nДолгота: {result[0]['data']['geo_lon']}")
+        search_result = data_client.suggest("address", search_address, language=language, count=20)
+        for count, response_address in enumerate(search_result):
+            print(f"{count}. {response_address['value']}")
 
+        print("Select the appropriate address to receive the geotags")
+        choice_address: int = int(input("< "))
+        final_address: str = search_result[choice_address - 1]["value"]
 
+        result: list[dict] = data_client.suggest("address", final_address, count=1, language=language)
+
+        print(
+            f"""The geometries of the address you selected:\n
+            Latitude: {result[0]['data']['geo_lat']}\n
+            Longitude: {result[0]['data']['geo_lon']}"""
+        )
 
 
 def main_menu():
+    os.system("cls")
+    print("1. Settings")
+    print("2. New request")
+    print("3. Exit")
 
-    os.system('cls')
-    print('1. Настройки')
-    print('2. Новый запрос')
-    print('3. Выход')
+    var_choice: int = int(input("< "))
 
-    varChoice = int(input("< "))
-
-    match varChoice:
+    match var_choice:
         case 1:
             settings()
         case 2:
-            newRequest()
+            new_request()
         case 3:
-            exit
+            sys.exit()
 
 
 main_menu()
