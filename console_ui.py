@@ -11,6 +11,8 @@ db = DatabaseHandler()
 
 
 def settings():
+    """The menu with settings for users,
+    contain basic settings that need to check for correct work with dadata"""
     os.system("cls")
 
     print("1. Change API key")
@@ -71,7 +73,8 @@ def settings():
             main_menu()
 
 
-def new_request():
+def new_request() -> None:
+    """The menu which needed for taking request address from users to dadata"""
     os.system("cls")
     api_key: str = db.get_api()
     secret_key: str = db.get_secret()
@@ -82,15 +85,19 @@ def new_request():
         search_address = input("< ")
         if search_address == "exit":
             break
-        search_result = data_client.suggest("address", search_address, language=language, count=20)
+        search_result = data_client.suggest(
+            "address", search_address, language=language, count=20
+        )
         for count, response_address in enumerate(search_result):
             print(f"{count}. {response_address['value']}")
 
         print("Select the appropriate address to receive the geotags")
         choice_address: int = int(input("< "))
-        final_address: str = search_result[choice_address - 1]["value"]
+        final_address: str = search_result[choice_address-1]["value"]
 
-        result: list[dict] = data_client.suggest("address", final_address, count=1, language=language)
+        result: list[dict] = data_client.suggest(
+            "address", final_address, count=1, language=language
+        )
 
         print(
             f"""The geometries of the address you selected:\n
@@ -99,7 +106,12 @@ def new_request():
         )
 
 
-def main_menu():
+def main_menu() -> None:
+    """The main menu with 3 ability:
+    1. Go to settings
+    2. Send a new request
+    3. Quit the program
+    """
     os.system("cls")
     print("1. Settings")
     print("2. New request")
